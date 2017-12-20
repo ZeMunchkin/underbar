@@ -146,15 +146,16 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (!arguments[2] && Array.isArray(collection)) {
+    if (arguments[2] === undefined && Array.isArray(collection)) {
       var shiftedCollection = collection.slice(1);
       accumulator = collection[0];
       _.each(shiftedCollection, function (item) {
         accumulator = iterator(accumulator, item);
       });
       return accumulator;
+    }
 
-    } else if (!arguments[2] && !Array.isArray(collection)) {
+    if (arguments[2] === undefined && !Array.isArray(collection)) {
       var keys = Object.keys(collection);
       accumulator = collection[keys[0]];
       var shiftedKeys = keys.slice(1);
@@ -162,13 +163,12 @@
         accumulator = iterator(accumulator, collection[key]);
       });
       return accumulator;
-
-    } else {
-      _.each(collection, function (item) {
-        accumulator = iterator(accumulator, item);
-      });
-      return accumulator;
     }
+    
+    _.each(collection, function (item) {
+      accumulator = iterator(accumulator, item);
+    });
+    return accumulator;
   };
 
 
