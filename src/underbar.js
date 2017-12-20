@@ -29,14 +29,11 @@
    * implementing the sections you are responsible for.
    */
 
-  // Return an array of the first n elements of an array. If n is undefined,
-  // return just the first element.
   _.first = function(array, n) {
     return n === undefined ? array[0] : array.slice(0, n);
   };
 
-  // Like first, but for the last elements. If n is undefined, return just the
-  // last element.
+
   _.last = function(array, n) {
     if (n === undefined) {
       return array[array.length - 1];
@@ -47,11 +44,7 @@
     return array.slice((array.length - n), (array.length));
   };
 
-  // Call iterator(value, key, collection) for each element of collection.
-  // Accepts both arrays and objects.
-  //
-  // Note: _.each does not have a return value, but rather simply runs the
-  // iterator function over each item in the input collection.
+
   _.each = function(collection, iterator) {
     if (!Array.isArray(collection)) {
       var objKeys = Object.keys(collection);
@@ -65,24 +58,18 @@
     }
   };
 
-  // Returns the index at which value can be found in the array, or -1 if value
-  // is not present in the array.
-  _.indexOf = function(array, target){
-    // TIP: Here's an example of a function that needs to iterate, which we've
-    // implemented for you. Instead of using a standard `for` loop, though,
-    // it uses the iteration helper `each`, which you will need to write.
-    var result = -1;
 
+  _.indexOf = function(array, target){
+    var result = -1;
     _.each(array, function(item, index) {
       if (item === target && result === -1) {
         result = index;
       }
     });
-
     return result;
   };
 
-  // Return all elements of an array that pass a truth test.
+
   _.filter = function(collection, test) {
     var result = [];
     _.each(collection, function(item) {
@@ -93,10 +80,8 @@
     return result;
   };
 
-  // Return all elements of an array that don't pass a truth test.
+
   _.reject = function(collection, test) {
-    // TIP: see if you can re-use _.filter() here, without simply
-    // copying code in and modifying it
     var results = [];
     _.each(collection, function (item) {
       if (!test(item)) {
@@ -122,31 +107,19 @@
   };
 
 
-  // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
     var results = [];
     _.each(collection, function (item) {
       results.push(iterator(item));
     });
     return results;
-    // map() is a useful primitive iteration function that works a lot
-    // like each(), but in addition to running the operation on all
-    // the members, it also maintains an array of results.
   };
 
-  /*
-   * TIP: map is really handy when you want to transform an array of
-   * values into a new array of values. _.pluck() is solved for you
-   * as an example of this.
-   */
 
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(collection, key) {
-    // TIP: map is really handy when you want to transform an array of
-    // values into a new array of values. _.pluck() is solved for you
-    // as an example of this.
     return _.map(collection, function(item){
       return item[key];
     });
@@ -173,7 +146,31 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if (!arguments[2] && Array.isArray(collection)) {
+      var shiftedCollection = collection.slice(1);
+      accumulator = collection[0];
+      _.each(shiftedCollection, function (item) {
+        accumulator = iterator(accumulator, item);
+      });
+      return accumulator;
+
+    } else if (!arguments[2] && !Array.isArray(collection)) {
+      var keys = Object.keys(collection);
+      accumulator = collection[keys[0]];
+      var shiftedKeys = keys.slice(1);
+      _.each(shiftedKeys, function (key) {
+        accumulator = iterator(accumulator, collection[key]);
+      });
+      return accumulator;
+
+    } else {
+      _.each(collection, function (item) {
+        accumulator = iterator(accumulator, item);
+      });
+      return accumulator;
+    }
   };
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
