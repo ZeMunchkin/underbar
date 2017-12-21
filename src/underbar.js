@@ -94,14 +94,21 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
     var results = [];
-    if (!isSorted) {
+    if (arguments.length <= 2) {
       _.each(array, function (item) {
         if (_.indexOf(results, item) === -1) {
           results.push(item);
         }
       });
-    } else {
-
+    }
+    if (arguments.length === 3) {
+      var iteratedResults = [];
+      _.each(array, function (item) {
+        if (_.indexOf(iteratedResults, iterator(item)) === -1) {
+          results.push(item);
+          iteratedResults.push(iterator(item));
+        }
+      });
     }
     return results;
   };
@@ -164,7 +171,7 @@
       });
       return accumulator;
     }
-    
+
     _.each(collection, function (item) {
       accumulator = iterator(accumulator, item);
     });
@@ -187,13 +194,19 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+    if (collection === undefined) {
+      return true;
+    }
+    if (arguments.length === 1) {
+      _.each(collection, )
+    }
+    return _.reduce(collection, iterator)
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
+    return !_.every(collection, !iterator);
   };
 
 
@@ -216,6 +229,16 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    var argumentsArray = [];
+    for (var i = 1; i < arguments.length; i++) {
+      argumentsArray.push(arguments[i]);
+    }
+    _.each(argumentsArray, function(arguObj) {
+      for (var key in arguObj) {
+        obj[key] = arguObj[key];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
