@@ -192,7 +192,6 @@
   };
 
 
-  // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     if (!iterator) {
       iterator = function (item) {
@@ -211,33 +210,11 @@
 
 
 
-/*    if (collection === [] || collection === {}) {
-      return true;
-    }
-    var accumulator = true;
-    if (arguments.length === 1) {
-      _.each(collection, function (item) {
-        if(!item) {
-          return false;
-        };
-      });
-      return accumulator;
-    }
-    if (arguments.length === 2) {
-      _.each(collection, function (item) {
-        if (!iterator(item)) {
-          return false;
-        }
-      });
-    }
-    return accumulator;
-  };
-*/
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    return !_.every(collection, !iterator);
+    return _.every(collection, iterator);
   };
 
 
@@ -351,7 +328,12 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    return func.apply(this, arguments);
+    var args = [].slice.call(arguments);
+    args = args.slice(2);
+
+    setTimeout(function () {
+      func.apply(this, args);
+    }, wait);
   };
 
 
