@@ -101,6 +101,7 @@
         }
       });
     }
+
     if (arguments.length === 3) {
       var iteratedResults = [];
       _.each(array, function (item) {
@@ -195,7 +196,7 @@
   _.every = function(collection, iterator) {
     if (!iterator) {
       iterator = function (item) {
-        return !! item;
+        return !!item;
       }
     }
 
@@ -214,7 +215,19 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
-    return _.every(collection, iterator);
+    if (!iterator) {
+      iterator = function (item) {
+        return !!item;
+      }
+    }
+
+    return _.reduce(collection, function (acc, item) {
+      if (acc === true) {
+        return acc;
+      }
+      acc = !! iterator(item);
+      return acc;
+    }, false);
   };
 
 
