@@ -194,27 +194,45 @@
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
-    if (collection === undefined) {
+    if (!iterator) {
+      iterator = function (item) {
+        return !! item;
+      }
+    }
+
+    return _.reduce(collection, function (acc, item) {
+      if (acc === false) {
+        return acc;
+      }
+      acc = !!iterator(item);
+      return acc;
+    }, true);
+  };
+
+
+
+/*    if (collection === [] || collection === {}) {
       return true;
     }
     var accumulator = true;
     if (arguments.length === 1) {
       _.each(collection, function (item) {
-        if(item != true) {
-          accumulator = false;
+        if(!item) {
+          return false;
         };
       });
       return accumulator;
     }
     if (arguments.length === 2) {
       _.each(collection, function (item) {
-        if (iterator(item) != true) {
-          accumulator = false;
+        if (!iterator(item)) {
+          return false;
         }
       });
     }
     return accumulator;
   };
+*/
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
