@@ -197,10 +197,23 @@
     if (collection === undefined) {
       return true;
     }
+    var accumulator = true;
     if (arguments.length === 1) {
-      _.each(collection, )
+      _.each(collection, function (item) {
+        if(item != true) {
+          accumulator = false;
+        };
+      });
+      return accumulator;
     }
-    return _.reduce(collection, iterator)
+    if (arguments.length === 2) {
+      _.each(collection, function (item) {
+        if (iterator(item) != true) {
+          accumulator = false;
+        }
+      });
+    }
+    return accumulator;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -299,6 +312,18 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var priorArguments = [];
+    var priorResults = {};
+    var result;
+
+    return function () {
+      if (priorResults[arguments]) {
+        return priorResults[arguments];
+      }
+      result = func.apply(this, arguments);
+      priorResults[arguments] = result;
+      return result;
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -308,6 +333,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    return func.apply(this, arguments);
   };
 
 
