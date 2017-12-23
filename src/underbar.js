@@ -210,10 +210,6 @@
   };
 
 
-
-
-  // Determine whether any of the elements pass a truth test. If no iterator is
-  // provided, provide a default one
   _.some = function(collection, iterator) {
     if (!iterator) {
       iterator = function (item) {
@@ -225,7 +221,7 @@
       if (acc === true) {
         return acc;
       }
-      acc = !! iterator(item);
+      acc = !!iterator(item);
       return acc;
     }, false);
   };
@@ -238,17 +234,6 @@
    * In this section, we'll look at a couple of helpers for merging objects.
    */
 
-  // Extend a given object with all the properties of the passed in
-  // object(s).
-  //
-  // Example:
-  //   var obj1 = {key1: "something"};
-  //   _.extend(obj1, {
-  //     key2: "something new",
-  //     key3: "something else new"
-  //   }, {
-  //     bla: "even more stuff"
-  //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
     var argumentsArray = [];
     for (var i = 1; i < arguments.length; i++) {
@@ -262,8 +247,6 @@
     return obj;
   };
 
-  // Like extend, but doesn't ever overwrite a key that already
-  // exists in obj
   _.defaults = function(obj) {
     var argumentsArray = [];
     for (var i = 1; i < arguments.length; i++) {
@@ -320,18 +303,17 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-    var priorArguments = [];
-    var priorResults = {};
-    var result;
+    var storage = {};
 
     return function () {
-      if (priorResults[arguments]) {
-        return priorResults[arguments];
+      var args = JSON.stringify(arguments);
+      if (storage[args]) {
+        return storage[args];
       }
-      result = func.apply(this, arguments);
-      priorResults[arguments] = result;
-      return result;
-    }
+      var results = func.apply(this, arguments);
+      storage[args] = results;
+      return results;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
