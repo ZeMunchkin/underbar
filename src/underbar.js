@@ -316,6 +316,7 @@
     };
   };
 
+
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -343,6 +344,18 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var randomizedArray = [];
+    var workingArray = array.slice();
+
+    while (workingArray.length > 0) {
+      var currentLength = workingArray.length;
+      var randomIndex = Math.floor(Math.random() * currentLength);
+      console.log(randomIndex);
+      randomizedArray.push(workingArray[randomIndex]);
+      workingArray.splice(randomIndex, 1);
+    }
+
+    return randomizedArray;
   };
 
 
